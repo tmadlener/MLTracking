@@ -17,6 +17,7 @@ set(DD4HEP_SET_RPATH ON)
 dd4hep_set_compiler_flags()
 find_package(k4FWCore 1.3 REQUIRED)
 find_package(EDM4HEP)
+find_package(onnxruntime REQUIRED)
 
 include(cmake/Key4hepConfig.cmake)
 include(GNUInstallDirs)
