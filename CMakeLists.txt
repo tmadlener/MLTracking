@@ -23,3 +23,11 @@ include(cmake/Key4hepConfig.cmake)
 include(GNUInstallDirs)
 
 add_subdirectory(TrackFinding)
+
+include(CTest)
+set(USE_EXTERNAL_CATCH2 AUTO CACHE STRING "Link against an external Catch2 v3 static library, otherwise build it locally")
+set_property(CACHE USE_EXTERNAL_CATCH2 PROPERTY STRINGS AUTO ON OFF)
+
+if(BUILD_TESTING)
+  add_subdirectory(tests)
+endif()
