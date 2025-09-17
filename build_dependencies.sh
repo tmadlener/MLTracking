@@ -70,3 +70,6 @@ function build_dependencies() {
     cd k4ActsTracking && k4_local_repo
     cd ../
 }
+
+clone_dependencies
+build_dependencies
