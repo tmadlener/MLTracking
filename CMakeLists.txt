@@ -20,6 +20,7 @@ find_package(EDM4HEP)
 find_package(onnxruntime REQUIRED)
 find_package(Torch REQUIRED)
 find_package(Acts COMPONENTS PluginGnn REQUIRED)
+find_package(k4ActsTracking REQUIRED)
 
 
 include(cmake/Key4hepConfig.cmake)
