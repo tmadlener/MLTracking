@@ -18,6 +18,9 @@ dd4hep_set_compiler_flags()
 find_package(k4FWCore 1.3 REQUIRED)
 find_package(EDM4HEP)
 find_package(onnxruntime REQUIRED)
+find_package(Torch REQUIRED)
+find_package(Acts COMPONENTS PluginGnn REQUIRED)
+
 
 include(cmake/Key4hepConfig.cmake)
 include(GNUInstallDirs)
