@@ -16,7 +16,7 @@ function clone_if_not_exists() {
 
 # Clone all dependencies
 function clone_dependencies() {
-    clone_if_not_exists https://github.com/tmadlener/k4ActsTracking --branch acts-gaudi-logger
+    clone_if_not_exists https://github.com/tmadlener/k4ActsTracking --branch gaudi-logging-and-tracking
     clone_if_not_exists https://github.com/tmadlener/acts --branch build-gnn-plugin-no-cuda
     clone_if_not_exists https://github.com/rusty1s/pytorch_scatter
 }
@@ -40,6 +40,7 @@ function build_acts() {
         -DACTS_GNN_ENABLE_ONNX=ON \
         -DACTS_GNN_ENABLE_TORCH=ON \
         -DACTS_BUILD_PLUGIN_DD4HEP=ON \
+        -DACTS_BUILD_PLUGION_JSON=ON \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_CXX_STANDARD=20 \
         -DCMAKE_INSTALL_PREFIX=$(pwd)/acts/install \
