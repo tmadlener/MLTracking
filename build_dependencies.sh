@@ -40,7 +40,8 @@ function build_acts() {
         -DACTS_GNN_ENABLE_ONNX=ON \
         -DACTS_GNN_ENABLE_TORCH=ON \
         -DACTS_BUILD_PLUGIN_DD4HEP=ON \
-        -DACTS_BUILD_PLUGION_JSON=ON \
+        -DACTS_BUILD_PLUGIN_JSON=ON \
+        -DACTS_USE_SYSTEM_NLOHMANN_JSON=ON \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_CXX_STANDARD=20 \
         -DCMAKE_INSTALL_PREFIX=$(pwd)/acts/install \
