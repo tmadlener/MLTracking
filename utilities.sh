@@ -61,3 +61,11 @@ k4_local_repo() {
     echo "Added $PWD/$install to the environment and removed any paths containing /${current_repo}/"
     echo "Some variables may have to be updated manually to point to the local installation"
 }
+
+setup_pytorch_cmake_prefix_path() {
+    torch_prefix=$(dirname $(python -c 'import torch; print(torch.__file__)'))
+    export CMAKE_PREFIX_PATH=${torch_prefix}/share/cmake:${CMAKE_PREFIX_PATH}
+    export LD_LIBRARY_PATH=${torch_prefix}/lib:${LD_LIBRARY_PATH}
+}
+
+setup_pytorch_cmake_prefix_path
