@@ -22,9 +22,11 @@ jobs:
           path: MLTracking
       - name: Build dependencies
         run: |
+          . /opt/spack/opt/spack/*/*/*/*/*/mucoll-stack-full-gaudi-test-*/setup.sh
           . MLTracking/build_dependencies.sh
       - name: Build
         run: |
+          . /opt/spack/opt/spack/*/*/*/*/*/mucoll-stack-full-gaudi-test-*/setup.sh
           . MLTracking/setup_dependencies.sh
           cd MLTracking
           cmake -B build -S . \

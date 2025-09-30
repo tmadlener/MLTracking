@@ -23,7 +23,7 @@ function clone_if_not_exists() {
 
 # Clone all dependencies
 function clone_dependencies() {
-    clone_if_not_exists https://github.com/tmadlener/k4ActsTracking --branch acts-gaudi-logger
+    clone_if_not_exists https://github.com/key4hep/k4ActsTracking
     clone_if_not_exists https://github.com/tmadlener/acts --branch build-gnn-plugin-no-cuda
     clone_if_not_exists https://github.com/rusty1s/pytorch_scatter
 }
