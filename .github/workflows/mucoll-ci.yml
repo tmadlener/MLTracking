@@ -14,8 +14,6 @@ concurrency:
 jobs:
   build-mucoll-image:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/muoncollidersoft/mucoll-ml-ubuntu24:full_gaudi_test
     steps:
       - name: Free Disk Space (Ubuntu)
         uses: endersonmenezes/free-disk-space@v2
@@ -32,17 +30,24 @@ jobs:
       - uses: actions/checkout@v5
         with:
           path: MLTracking
+      - name: Launch Container
+        run: |
+          docker run -it --name ci-container --privileged -v ${GITHUB_WORKSPACE}:/packages -d ghcr.io/muoncollidersoft/mucoll-ml-ubuntu24:full_gaudi_test /bin/bash
       - name: Build dependencies
         run: |
-          . /opt/spack/opt/spack/*/*/*/*/*/mucoll-stack-full-gaudi-test-*/setup.sh
-          . MLTracking/build_dependencies.sh
+          docker exec ci-container /bin/bash -c '\
+          . /opt/spack/opt/spack/*/*/*/*/*/mucoll-stack-full-gaudi-test-*/setup.sh;  \
+          cd /packages/; \
+          . MLTracking/build_dependencies.sh;'
       - name: Build
         run: |
-          . /opt/spack/opt/spack/*/*/*/*/*/mucoll-stack-full-gaudi-test-*/setup.sh
-          . MLTracking/setup_dependencies.sh
-          cd MLTracking
+          docker exec ci-container /bin/bash -c '\
+          . /opt/spack/opt/spack/*/*/*/*/*/mucoll-stack-full-gaudi-test-*/setup.sh; \
+          cd /packages/;
+          . MLTracking/setup_dependencies.sh; \
+          cd MLTracking; \
           cmake -B build -S . \
             -GNinja \
             -DCMAKE_INSTALL_PREFIX=$(pwd)/install \
-            -DCMAKE_CXX_STANDARD=20
-          cmake --build build
+            -DCMAKE_CXX_STANDARD=20; \
+          cmake --build build'
