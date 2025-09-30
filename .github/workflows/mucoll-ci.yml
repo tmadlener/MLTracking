@@ -1,0 +1,34 @@
+name: MuColl Image Build
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-mucoll-image:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/muoncollidersoft/mucoll-ml-ubuntu24:full_gaudi_test
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          path: MLTracking
+      - name: Build dependencies
+        run: |
+          . MLTracking/build_dependencies.sh
+      - name: Build
+        run: |
+          . MLTracking/setup_dependencies.sh
+          cd MLTracking
+          cmake -B build -S . \
+            -GNinja \
+            -DCMAKE_INSTALL_PREFIX=$(pwd)/install \
+            -DCMAKE_CXX_STANDARD=20
+          cmake --build build

@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+
+# Check if k4_local_repo function is defined, if not source utilities.sh
+if ! declare -f k4_local_repo > /dev/null; then
+    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    . "$script_dir/utilities.sh"
+fi
+
 # Clone a git repository if the target directory doesn't already exist
 function clone_if_not_exists() {
     local repo_url="$1"
