@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - main
+    - dbg-ci
   pull_request:
   workflow_dispatch:
 
@@ -32,22 +33,37 @@ jobs:
           path: MLTracking
       - name: Launch Container
         run: |
-          docker run -it --name ci-container --privileged -v ${GITHUB_WORKSPACE}:/packages -d ghcr.io/muoncollidersoft/mucoll-ml-ubuntu24:full_gaudi_test /bin/bash
+          docker run -it --name ci_container --privileged -v ${GITHUB_WORKSPACE}:/packages -d ghcr.io/muoncollidersoft/mucoll-ml-ubuntu24:full_gaudi_test
+      - name: Get Setup Script
+        run: |
+          SETUP_SCRIPT=$(docker exec ci_container /bin/bash -c "grep setup_mucoll_ml /etc/profile.d/aliases.sh | awk -F '=' '{print \$2}' | sed 's/\"//g'")
+          echo "SETUP_SCRIPT=$SETUP_SCRIPT" >> $GITHUB_ENV
       - name: Build dependencies
         run: |
-          docker exec ci-container /bin/bash -c '\
-          . /opt/spack/opt/spack/*/*/*/*/*/mucoll-stack-full-gaudi-test-*/setup.sh;  \
-          cd /packages/; \
-          . MLTracking/build_dependencies.sh;'
+          echo "set -ex" > ${GITHUB_WORKSPACE}/dependency_build.sh
+          echo $SETUP_SCRIPT > ${GITHUB_WORKSPACE}/dependency_build.sh
+          cat << 'EOF' >> ${GITHUB_WORKSPACE}/dependency_build.sh
+          cd /packages
+          . MLTracking/build_dependencies.sh
+          EOF
+          chmod +x ${GITHUB_WORKSPACE}/dependency_build.sh
+
+          docker exec ci_container /bin/bash -c "/packages/dependency_build.sh"
       - name: Build
         run: |
-          docker exec ci-container /bin/bash -c '\
-          . /opt/spack/opt/spack/*/*/*/*/*/mucoll-stack-full-gaudi-test-*/setup.sh; \
-          cd /packages/;
-          . MLTracking/setup_dependencies.sh; \
-          cd MLTracking; \
+          echo "set -ex" > ${GITHUB_WORKSPACE}/build.sh
+          echo $SETUP_SCRIPT >> ${GITHUB_WORKSPACE}/build.sh
+          cat << 'EOF' >> ${GITHUB_WORKSPACE}/build.sh
+          cd /packages
+          . MLTracking/setup_dependencies.sh
+          cd MLTracking
           cmake -B build -S . \
             -GNinja \
             -DCMAKE_INSTALL_PREFIX=$(pwd)/install \
-            -DCMAKE_CXX_STANDARD=20; \
-          cmake --build build'
+            -DCMAKE_CXX_STANDARD=20
+          cmake --build build
+
+          EOF
+          chmod +x ${GITHUB_WORKSPACE}/build.sh
+
+          docker exec ci_container /bin/bash -c "/packages/build.sh"
