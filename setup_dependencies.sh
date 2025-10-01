@@ -9,6 +9,6 @@ fi
 
 curr_dir=$(pwd)
 
-export CMAKE_PREFIX_PATH=$(relpath ${script_dir}/../pytorch_scatter/install):$CMAKE_PREFIX_PATH
+export CMAKE_PREFIX_PATH=$(realpath ${script_dir}/../pytorch_scatter/install):$CMAKE_PREFIX_PATH
 cd ${script_dir}/../acts && k4_local_repo
 cd ${script_dir}/../kActsTracking && k4_local_repo
