@@ -8,6 +8,7 @@ if ! declare -f k4_local_repo > /dev/null; then
 fi
 
 cmake_build_system=$(which ninja > /dev/null 2>&1 && echo "-GNinja")
+ccache_config=$(which ccache > /dev/null 2>&1 && echo "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache")
 
 # Clone a git repository if the target directory doesn't already exist
 function clone_if_not_exists() {
@@ -37,7 +38,7 @@ function build_pytorch_scatter() {
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_CXX_STANDARD=20 \
         -DCMAKE_INSTALL_PREFIX=$(pwd)/pytorch_scatter/install \
-        ${cmake_build_system}
+        ${cmake_build_system} ${ccache_config}
 
     cmake --build pytorch_scatter/build --target install
 }
@@ -54,7 +55,7 @@ function build_acts() {
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_CXX_STANDARD=20 \
         -DCMAKE_INSTALL_PREFIX=$(pwd)/acts/install \
-        ${cmake_build_system}
+        ${cmake_build_system} ${ccache_config}
 
     cmake --build acts/build --target install
 }
@@ -64,7 +65,7 @@ function build_k4actstracking() {
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_CXX_STANDARD=20 \
         -DCMAKE_INSTALL_PREFIX=$(pwd)/k4ActsTracking/install \
-        ${cmake_build_system}
+        ${cmake_build_system} ${ccache_config}
 
     cmake --build k4ActsTracking/build --target install
 }
